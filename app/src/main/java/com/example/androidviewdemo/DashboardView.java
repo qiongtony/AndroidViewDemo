@@ -33,8 +33,8 @@ public class DashboardView extends View {
     /**
      * 直线的长度
      */
-    private static final int LINE_LENGTH = 150;
-    public static final int RADIUS = 200;
+    private static final int LINE_LENGTH = (int) ScreenUtil.dp2Px(80);
+    public static final int RADIUS = (int) ScreenUtil.dp2Px(100);
 
     private Paint paint;
     private Path path;
@@ -79,7 +79,7 @@ public class DashboardView extends View {
         pathMeasure.setPath(path, false);
 
         dashPath.reset();
-        dashPath.addRect(0, 0, 2, 10, Path.Direction.CW);
+        dashPath.addRect(0, 0, ScreenUtil.dp2Px(1), ScreenUtil.dp2Px(5), Path.Direction.CW);
         pathDashPathEffect = new PathDashPathEffect(dashPath, (pathMeasure.getLength() - 2) / (DASH_LINE_COUNT - 1), 0, PathDashPathEffect.Style.ROTATE);
 
 

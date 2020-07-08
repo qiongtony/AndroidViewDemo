@@ -6,17 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-   <com.example.androidviewdemo.DashboardView
-       android:layout_width="200dp"
-       android:layout_height="200dp"
-       android:id="@+id/dash_board"
-       android:layout_centerHorizontal="true"
-       />
+    <com.example.androidviewdemo.DashboardView
+        android:id="@+id/dash_board"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true" />
 
-   <com.example.androidviewdemo.PieChatView
-       android:layout_width="250dp"
-       android:layout_height="250dp"
-       android:layout_below="@id/dash_board"
-      android:layout_centerHorizontal="true"/>
+    <com.example.androidviewdemo.PieChatView
+        android:id="@+id/pie_chat"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@id/dash_board"
+        android:layout_centerHorizontal="true" />
+
+    <com.example.androidviewdemo.AvatarView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/pie_chat"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

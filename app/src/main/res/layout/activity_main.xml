@@ -22,8 +22,18 @@
     <com.example.androidviewdemo.AvatarView
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:id="@+id/avatar"
         android:layout_below="@id/pie_chat"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/jump_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳转到第7节作业"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        />
 
 
 </RelativeLayout>

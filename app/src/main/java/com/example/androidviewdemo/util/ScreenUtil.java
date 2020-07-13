@@ -1,4 +1,4 @@
-package com.example.androidviewdemo;
+package com.example.androidviewdemo.util;
 
 import android.content.res.Resources;
 import android.util.DisplayMetrics;

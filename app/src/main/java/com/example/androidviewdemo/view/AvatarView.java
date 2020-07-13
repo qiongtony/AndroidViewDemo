@@ -1,4 +1,4 @@
-package com.example.androidviewdemo;
+package com.example.androidviewdemo.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.example.androidviewdemo.R;
+import com.example.androidviewdemo.util.ScreenUtil;
 
 /**
  * 使用clipPath裁剪绘制范围，然后绘制图片，绘制完成回退离屏缓存；

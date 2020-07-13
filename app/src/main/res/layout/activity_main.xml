@@ -6,20 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.example.androidviewdemo.DashboardView
+    <com.example.androidviewdemo.view.DashboardView
         android:id="@+id/dash_board"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true" />
 
-    <com.example.androidviewdemo.PieChatView
+    <com.example.androidviewdemo.view.PieChatView
         android:id="@+id/pie_chat"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_below="@id/dash_board"
         android:layout_centerHorizontal="true" />
 
-    <com.example.androidviewdemo.AvatarView
+    <com.example.androidviewdemo.view.AvatarView
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:id="@+id/avatar"

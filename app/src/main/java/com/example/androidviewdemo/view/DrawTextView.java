@@ -1,4 +1,4 @@
-package com.example.androidviewdemo;
+package com.example.androidviewdemo.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

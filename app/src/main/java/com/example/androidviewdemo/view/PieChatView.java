@@ -1,4 +1,4 @@
-package com.example.androidviewdemo;
+package com.example.androidviewdemo.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.example.androidviewdemo.util.ScreenUtil;
 
 import java.util.Random;
 

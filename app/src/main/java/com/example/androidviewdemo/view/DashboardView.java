@@ -1,4 +1,4 @@
-package com.example.androidviewdemo;
+package com.example.androidviewdemo.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.example.androidviewdemo.util.ScreenUtil;
 
 /**
  * 自定义仪表盘View

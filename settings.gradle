@@ -1,2 +1,2 @@
-include ':app', ':hencoder08_animation', ':hencoder09drawable'
+include ':app', ':hencoder08_animation', ':hencoder09_drawable', ':hencoder10_taglayout'
 rootProject.name='AndroidViewDemo'

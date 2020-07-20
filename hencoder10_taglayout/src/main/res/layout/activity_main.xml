@@ -6,11 +6,103 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-   <com.example.hencoder10taglayout.CircleView
-       android:layout_width="300dp"
-       android:layout_height="200dp"
-       app:layout_constraintLeft_toLeftOf="parent"
-       app:layout_constraintTop_toTopOf="parent"
-       />
+   <com.example.hencoder10taglayout.TagLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:background="@color/colorPrimary"
+          android:text="吉林省"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:text="广东省"
+          android:background="@color/colorPrimaryDark"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:text="新疆乌鲁拉西省"
+          android:background="@color/colorPrimaryDark"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:background="@color/colorAccent"
+          android:text="吉林省"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:background="@color/colorPrimary"
+          android:text="吉林省"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:text="广东省"
+          android:background="@color/colorPrimaryDark"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:text="新疆乌鲁拉西省"
+          android:background="@color/colorPrimaryDark"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:background="@color/colorAccent"
+          android:text="吉林省"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:background="@color/colorPrimary"
+          android:text="吉林省"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:text="广东省"
+          android:background="@color/colorPrimaryDark"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:text="广东省"
+          android:background="@color/colorPrimaryDark"
+          />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:text="广东省"
+          android:background="@color/colorPrimaryDark"
+          />
+   </com.example.hencoder10taglayout.TagLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,21 +28,22 @@ public class TagLayout extends ViewGroup {
             View child = getChildAt(i);
             // 测量子View的尺寸, widthUsed要传0，不然需要折行的View会被缩小
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, heightUsed);
+            MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
             if (widthMeasureSpec != MeasureSpec.UNSPECIFIED && (child.getMeasuredWidth() + widthUsed) > MeasureSpec.getSize(widthMeasureSpec)){
                 measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, heightUsed);
                 widthUsed = 0;
-                maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
+                maxHeight = Math.max(maxHeight, lp.topMargin + child.getMeasuredHeight() + lp.bottomMargin );
                 heightUsed+= maxHeight;
                 maxHeight = 0;
             }
             Rect rect = getRect(i);
-            rect.left = widthUsed;
-            rect.top = heightUsed;
-            rect.right = widthUsed + child.getMeasuredWidth();
-            rect.bottom = heightUsed + child.getMeasuredHeight();
-            widthUsed += child.getMeasuredWidth();
+            rect.left = widthUsed + lp.leftMargin;
+            rect.top = heightUsed + lp.topMargin;
+            rect.right = rect.left + child.getMeasuredWidth();
+            rect.bottom = rect.top + child.getMeasuredHeight();
+            widthUsed += lp.leftMargin + child.getMeasuredWidth() + lp.rightMargin;
             maxWidth = Math.max(maxWidth, widthUsed);
-            maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
+            maxHeight = Math.max(maxHeight, lp.topMargin + child.getMeasuredHeight() + lp.bottomMargin);
         }
         setMeasuredDimension(resolveSize(maxWidth, widthMeasureSpec), resolveSize(heightUsed, heightMeasureSpec));
     }

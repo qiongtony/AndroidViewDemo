@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BulletView">
+        <attr name="rows" format="integer" />
+        <attr name="preRowHeight" format="dimension" />
+        <attr name="vSpace" format="dimension" />
+        <attr name="hSpace" format="dimension" />
+        <attr name="scrollSpeed" format="float" />
+        <attr name="overlapping" format="boolean" />
+        <attr name="innerTextSize" format="dimension" />
+        <attr name="innerTextColor" format="color" />
+        <attr name="innerBackground" format="reference" />
+    </declare-styleable>
+
+</resources>

@@ -17,6 +17,7 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_below="@id/dash_board"
+        android:visibility="gone"
         android:layout_centerHorizontal="true" />
 
     <com.example.androidviewdemo.view.AvatarView
@@ -24,6 +25,7 @@
         android:layout_height="200dp"
         android:id="@+id/avatar"
         android:layout_below="@id/pie_chat"
+        android:visibility="gone"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -33,6 +35,18 @@
         android:text="跳转到第7节作业"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        />
+
+    <com.example.androidviewdemo.view.BulletView
+        android:id="@+id/view_bullet"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        app:hSpace="2dp"
+        app:overlapping="false"
+        app:preRowHeight="30dp"
+        app:rows="3"
+        app:scrollSpeed="0.5"
         />
 
 

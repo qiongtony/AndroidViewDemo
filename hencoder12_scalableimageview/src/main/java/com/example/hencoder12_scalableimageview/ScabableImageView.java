@@ -9,15 +9,19 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
 
 import com.example.hencoder12_scalableimageview.util.BitmapUtil;
 
 /**
- * 可缩放（与宽度贴边，与高度贴边），可滑动的ImageView
+ * 双击可缩放（与宽度贴边，与高度贴边），可滑动（贴边）的ImageView
+ *
+ * 缩放居中：移动已经算出了图片要展示的起点，之后缩放，显示
+ * 惯性滑动使用：OverScroller。理由：1、启动速度快，Scroller启动速度慢；2、可实现超出位置的效果；
  */
-public class ScabableImageView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+public class ScabableImageView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, Runnable {
     private Paint paint;
     private Bitmap mBitmap;
     // 绘制时的偏移，保证居中
@@ -36,16 +40,20 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
     // 当前的缩放比例
     private float mCurrentScale;
 
+    private OverScroller mScroller;
+
     private ObjectAnimator mScaleAnimator;
+    private int mAbsoluteMaxScrollerX;
+
     public ScabableImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
     }
 
     {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitmap = BitmapUtil.getBitmap(getContext());
         mGestureDetector = new GestureDetector(getContext(), this);
+        mScroller = new OverScroller(getContext());
     }
 
     @Override
@@ -55,7 +63,7 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         mBigScale = getHeight() * 1f/ mBitmap.getHeight();
 
         mScaleAnimator = ObjectAnimator.ofFloat(this, "currentScale", mSmallScale, mBigScale);
-
+        mAbsoluteMaxScrollerX = (int) ((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
         if (mBig){
             mCurrentScale = mBigScale;
         }else{
@@ -104,10 +112,8 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         mDistanceX -= distanceX;
         mDistanceY -= distanceY;
         if (mBig){
-            int absoluteX = (int) ((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
-            int result = (int) Math.max(mDistanceX, -absoluteX);
-            mDistanceX = Math.min(result, absoluteX);
-//            mDistanceY = Math.min(0f, mDistanceY);
+            int result = (int) Math.max(mDistanceX, -mAbsoluteMaxScrollerX);
+            mDistanceX = Math.min(result, mAbsoluteMaxScrollerX);
         }
         invalidate();
         return false;
@@ -120,11 +126,18 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        mScroller.fling((int)mDistanceX, (int)mDistanceY, (int)velocityX, (int)velocityY, -mAbsoluteMaxScrollerX, mAbsoluteMaxScrollerX, 0, 0);
+        postOnAnimation(this);
         return false;
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
         mBig = !mBig;
         mDistanceX = mDistanceY = 0;
         if (mBig){
@@ -132,11 +145,6 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         }else{
             mScaleAnimator.reverse();
         }
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {
         return false;
     }
 
@@ -153,5 +161,19 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         mCurrentScale = currentScale;
         updateOffset(getWidth(), getHeight());
         invalidate();
+    }
+
+    @Override
+    public void run() {
+        // 惯性滑动没结束
+        if (mScroller.computeScrollOffset()){
+            // 获取当前滑动到x、y值
+            // 刷新
+            // 下一帧继续查看
+            mDistanceX = mScroller.getCurrX();
+            mDistanceY = mScroller.getCurrY();
+            invalidate();
+            postOnAnimation(this);
+        }
     }
 }

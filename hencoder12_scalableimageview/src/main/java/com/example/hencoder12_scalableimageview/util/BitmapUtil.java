@@ -5,10 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.example.hencoder08_animation.R;
+import com.example.hencoder12_scalableimageview.R;
 
 public class BitmapUtil {
-    private static final int AVATAR_WIDTH = (int) ScreenUtil.dp2Px(100);
+    private static final int AVATAR_WIDTH = (int) ScreenUtil.dp2Px(200);
     public static  Bitmap getBitmap(Context context){
         BitmapFactory.Options options = new BitmapFactory.Options();
         // 只获取bitmap的尺寸

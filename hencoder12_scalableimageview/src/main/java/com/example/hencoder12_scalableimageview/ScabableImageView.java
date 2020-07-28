@@ -20,6 +20,14 @@ import com.example.hencoder12_scalableimageview.util.BitmapUtil;
  *
  * 缩放居中：移动已经算出了图片要展示的起点，之后缩放，显示
  * 惯性滑动使用：OverScroller。理由：1、启动速度快，Scroller启动速度慢；2、可实现超出位置的效果；
+ *
+ * OverScroll方法解析：
+ * 主要包含四对值：起点，速度，极值（用于防止滑过头）
+ * 物理模型：
+ * 相当于从某点开始立即刹车，此时会依据惯性滑动一段距离，但滑动不会超过设置的边界
+ * 这里的值都是相对的，所以只要起点和极值的坐标系相同即可
+ * fling(int startX, int startY, int velocityX, int velocityY,
+ *             int minX, int maxX, int minY, int maxY)
  */
 public class ScabableImageView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, Runnable {
     private Paint paint;
@@ -136,6 +144,12 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         return false;
     }
 
+    /**
+     * 双击
+     * 第二次触摸到屏幕就会触发
+     * @param e
+     * @return
+     */
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         mBig = !mBig;
@@ -148,6 +162,11 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         return false;
     }
 
+    /**
+     * 第二次触摸按下后续事件都会触发
+     * @param e
+     * @return
+     */
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
@@ -165,7 +184,7 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
 
     @Override
     public void run() {
-        // 惯性滑动没结束
+        // 计算此时的位置，并返回惯性滑动有无结束
         if (mScroller.computeScrollOffset()){
             // 获取当前滑动到x、y值
             // 刷新

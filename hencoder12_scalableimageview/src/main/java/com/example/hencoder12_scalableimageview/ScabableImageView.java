@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.OverScroller;
 
@@ -30,6 +31,7 @@ import com.example.hencoder12_scalableimageview.util.BitmapUtil;
  *             int minX, int maxX, int minY, int maxY)
  */
 public class ScabableImageView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, Runnable {
+    private static final float OVER_SCALL = 1.5F;
     private Paint paint;
     private Bitmap mBitmap;
     // 绘制时的偏移，保证居中
@@ -52,6 +54,10 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
 
     private ObjectAnimator mScaleAnimator;
     private int mAbsoluteMaxScrollerX;
+    private int mAbsoluteMaxScrollerY;
+
+    private ScaleGestureDetector mScaleGestureDetector;
+    private MyScaleListener mScaleListener = new MyScaleListener();
 
     public ScabableImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -62,16 +68,19 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         mBitmap = BitmapUtil.getBitmap(getContext());
         mGestureDetector = new GestureDetector(getContext(), this);
         mScroller = new OverScroller(getContext());
+
+        mScaleGestureDetector = new ScaleGestureDetector(getContext(), mScaleListener);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mSmallScale = getWidth() * 1f / mBitmap.getWidth();
-        mBigScale = getHeight() * 1f/ mBitmap.getHeight();
+        mBigScale = getHeight() * 1f/ mBitmap.getHeight() * OVER_SCALL;
 
         mScaleAnimator = ObjectAnimator.ofFloat(this, "currentScale", mSmallScale, mBigScale);
         mAbsoluteMaxScrollerX = (int) ((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
+        mAbsoluteMaxScrollerY = (int) ((mBitmap.getHeight() * mBigScale - getHeight()) / 2f);
         if (mBig){
             mCurrentScale = mBigScale;
         }else{
@@ -81,21 +90,27 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
     }
 
     private void updateOffset(int w, int h) {
-        mOffsetX = (int) ((w - mBitmap.getWidth() * mCurrentScale) / 2f);
-        mOffsetY = (int) ((h - mBitmap.getHeight() * mCurrentScale) / 2f);
+        mOffsetX = (int) ((w - mBitmap.getWidth() * mCurrentScale) / 2f + mBitmap.getWidth() * mCurrentScale/ 2);
+        mOffsetY = (int) ((h - mBitmap.getHeight() * mCurrentScale) / 2f + mBitmap.getHeight() * mCurrentScale / 2);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.save();
         canvas.translate(mOffsetX + mDistanceX, mOffsetY + mDistanceY);
+//        canvas.translate(mBitmap.getWidth() / 2f, mBitmap.getHeight() / 2f);
         canvas.scale(mCurrentScale, mCurrentScale);
-        canvas.drawBitmap(mBitmap, 0, 0, paint);
+        canvas.drawBitmap(mBitmap,  - mBitmap.getWidth() / 2, - mBitmap.getHeight() / 2, paint);
+        canvas.restore();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mGestureDetector.onTouchEvent(event);
+        return
+//                mScaleGestureDetector.onTouchEvent(event)
+                mGestureDetector.onTouchEvent(event)
+                ;
     }
 
     // 要接收事件此处必须返回true
@@ -117,11 +132,17 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         // 起点-终点，所以应该减去distance
-        mDistanceX -= distanceX;
-        mDistanceY -= distanceY;
         if (mBig){
+            mDistanceX = mDistanceX - (distanceX * mBigScale);
+            mDistanceY = mDistanceY - (distanceY * mBigScale);
             int result = (int) Math.max(mDistanceX, -mAbsoluteMaxScrollerX);
             mDistanceX = Math.min(result, mAbsoluteMaxScrollerX);
+
+            result = (int) Math.max(mDistanceY, -mAbsoluteMaxScrollerY);
+            mDistanceY = Math.min(result, mAbsoluteMaxScrollerY);
+        }else{
+            mDistanceX -= distanceX;
+            mDistanceY -= distanceY;
         }
         invalidate();
         return false;
@@ -153,10 +174,15 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         mBig = !mBig;
-        mDistanceX = mDistanceY = 0;
+//        mDistanceX = mDistanceY = 0;
         if (mBig){
+            int x = (int) ((e.getX() - getWidth() / 2) * (mBigScale - mCurrentScale) / mBigScale);
+            int y = (int) ((e.getY() - getHeight() / 2) * (mBigScale - mCurrentScale) / mBigScale);
+            mDistanceX -= x;
+            mDistanceY -= y;
             mScaleAnimator.start();
         }else{
+            mDistanceX = mDistanceY = 0;
             mScaleAnimator.reverse();
         }
         return false;
@@ -193,6 +219,38 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
             mDistanceY = mScroller.getCurrY();
             invalidate();
             postOnAnimation(this);
+        }
+    }
+
+    class MyScaleListener implements ScaleGestureDetector.OnScaleGestureListener{
+        private float mInitScale;
+
+        /**
+         * 缩放过程
+         * @param detector  可以获取当前的缩放倍数
+         * @return
+         */
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            mCurrentScale = mInitScale * detector.getScaleFactor();
+            return false;
+        }
+
+
+        /**
+         * 缩放前的准备
+         * @param detector
+         * @return
+         */
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            mInitScale = mCurrentScale;
+            return false;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+
         }
     }
 }

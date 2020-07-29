@@ -132,17 +132,14 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         // 起点-终点，所以应该减去distance
+        mDistanceX -= distanceX;
+        mDistanceY -= distanceY;
         if (mBig){
-            mDistanceX = mDistanceX - (distanceX * mBigScale);
-            mDistanceY = mDistanceY - (distanceY * mBigScale);
             int result = (int) Math.max(mDistanceX, -mAbsoluteMaxScrollerX);
             mDistanceX = Math.min(result, mAbsoluteMaxScrollerX);
 
             result = (int) Math.max(mDistanceY, -mAbsoluteMaxScrollerY);
             mDistanceY = Math.min(result, mAbsoluteMaxScrollerY);
-        }else{
-            mDistanceX -= distanceX;
-            mDistanceY -= distanceY;
         }
         invalidate();
         return false;
@@ -176,8 +173,8 @@ public class ScabableImageView extends View implements GestureDetector.OnGesture
         mBig = !mBig;
 //        mDistanceX = mDistanceY = 0;
         if (mBig){
-            int x = (int) ((e.getX() - getWidth() / 2) * (mBigScale - mCurrentScale) / mBigScale);
-            int y = (int) ((e.getY() - getHeight() / 2) * (mBigScale - mCurrentScale) / mBigScale);
+            int x = (int) ((e.getX() - getWidth() / 2) * (mBigScale - mCurrentScale) / mCurrentScale);
+            int y = (int) ((e.getY() - getHeight() / 2) * (mBigScale - mCurrentScale) / mCurrentScale);
             mDistanceX -= x;
             mDistanceY -= y;
             mScaleAnimator.start();

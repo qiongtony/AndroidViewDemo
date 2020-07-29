@@ -1,2 +1,3 @@
+include ':KotlinLeanLib'
 include ':app', ':hencoder08_animation', ':hencoder09_drawable', ':hencoder10_taglayout', ':hencoder11_touch', ':hencoder12_scalableimageview'
 rootProject.name='AndroidViewDemo'

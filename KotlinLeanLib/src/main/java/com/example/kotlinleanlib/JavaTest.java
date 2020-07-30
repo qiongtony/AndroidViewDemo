@@ -8,5 +8,8 @@ public class JavaTest {
         Person person = new Person();
         person.setMarried(true);
         System.out.println("person.married = " + person.isMarried());
+
+        // java调用扩展函数，传入的第一个参数的接收者类型
+        StringFunctions.lastChar("Java");
     }
 }

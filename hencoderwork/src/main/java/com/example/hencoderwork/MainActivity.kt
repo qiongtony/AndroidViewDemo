@@ -12,9 +12,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         view = findViewById(R.id.view)
         printViewId(view)
+
+        SingletonDemo.getInstance().print()
     }
 
     fun printViewId(view : View?){
         Log.i("WWS", "viewId = ${view?.id}")
     }
+
+    // val与java的"final"基本一致，只是可以在getter方法动态修改而已；
+    val size : Int
+        get(){
+            return 1;
+        }
 }

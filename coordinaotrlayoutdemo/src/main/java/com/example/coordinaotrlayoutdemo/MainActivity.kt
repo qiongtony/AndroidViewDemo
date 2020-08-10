@@ -13,5 +13,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btn_with_toolbar).setOnClickListener( View.OnClickListener {
             startActivity(Intent(this, ToolbarWithCoordinatorLayoutActivity::class.java))
         })
+        findViewById<View>(R.id.btn_with_toolbar_snap).setOnClickListener( View.OnClickListener {
+            startActivity(Intent(this, ToolbarSnapActivity::class.java))
+        })
+        findViewById<View>(R.id.btn_with_view_pager).setOnClickListener( View.OnClickListener {
+            startActivity(Intent(this, CoordinatorLayoutAndViewPagerActivity::class.java))
+        })
     }
 }

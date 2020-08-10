@@ -14,15 +14,13 @@ import com.google.android.material.appbar.AppBarLayout
  * layout_scrollFlags:
  * scroll:跟着滑动，不设置，则会导致这部分固定，其实就相当于普通的View了
  * enterAlways：一下滑的时候就会显示出来
- * enterAlwaysCollapsed：下滑的时候如果，到顶部才显示
- *
  */
-class ToolbarWithCoordinatorLayoutActivity : AppCompatActivity() {
+class ToolbarSnapActivity : AppCompatActivity() {
     lateinit var recyclerView : RecyclerView
     lateinit var toolbar : Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_toolbar_with_coordinator_layout)
+        setContentView(R.layout.activity_toolbar_with_coordinator_layout_snap)
         toolbar = findViewById(R.id.tool_bar)
         recyclerView = findViewById(R.id.recycler)
 
@@ -30,7 +28,5 @@ class ToolbarWithCoordinatorLayoutActivity : AppCompatActivity() {
 
         val adapter = MyAdapter(this)
         recyclerView.adapter = adapter
-
-        AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED
     }
 }

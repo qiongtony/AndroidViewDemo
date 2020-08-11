@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,5 +20,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btn_with_view_pager).setOnClickListener( View.OnClickListener {
             startActivity(Intent(this, CoordinatorLayoutAndViewPagerActivity::class.java))
         })
+        findViewById<Button>(R.id.btn_custom_item_decoration).setOnClickListener {
+            ScrollToPosActivity.start(this);
+         }
     }
 }

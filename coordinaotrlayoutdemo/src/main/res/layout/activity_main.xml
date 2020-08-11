@@ -31,4 +31,12 @@
         android:padding="8dp"
         android:text="结合viewPager"
         android:textColor="@android:color/primary_text_dark" />
+
+    <Button
+        android:id="@+id/btn_custom_item_decoration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="自定义分割线"
+        android:textColor="@android:color/primary_text_dark" />
 </LinearLayout>

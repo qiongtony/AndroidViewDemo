@@ -4,13 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity() {
     lateinit var view : View
+    lateinit var imageView: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         view = findViewById(R.id.view)
+        imageView = findViewById(R.id.image_view);
         printViewId(view)
 
         SingletonDemo.getInstance().print()
@@ -34,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         for (i in array2.indices){
             Log.i("WWS", "copy array2[$i] = ${array2[i]}")
         }
+
+        val coroutineDemo = CoroutineDemo()
+        coroutineDemo.test1()
+
+        coroutineDemo.test2(imageView)
     }
 
     fun printViewId(view : View?){

@@ -1,5 +1,6 @@
 package com.example.kotlinleanlib
 
+import com.example.kotlinleanlib.lesson3.ReturnDemo
 import java.util.*
 
 fun  main(args : Array<String>){
@@ -37,6 +38,9 @@ fun  main(args : Array<String>){
 
     val user = User(123, "吴伟山", "广东省")
     saveUser(user)
+
+    val lesson3Demo = ReturnDemo()
+    lesson3Demo.test()
 }
 
 class MyClass {

@@ -7,16 +7,21 @@ import android.view.View
 import android.widget.ImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity() {
     lateinit var view : View
     lateinit var imageView: ImageView
+    lateinit var firstImageView : ImageView
+    lateinit var secondImageView: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         view = findViewById(R.id.view)
         imageView = findViewById(R.id.image_view);
+        firstImageView = findViewById(R.id.first_image_view);
+        secondImageView = findViewById(R.id.second_image_view);
         printViewId(view)
 
         SingletonDemo.getInstance().print()
@@ -45,6 +50,10 @@ class MainActivity : AppCompatActivity() {
         coroutineDemo.test1()
 
         coroutineDemo.test2(imageView)
+
+//        Executors.newSingleThreadExecutor().execute {
+            coroutineDemo.test3(firstImageView, secondImageView)
+//        }
     }
 
     fun printViewId(view : View?){

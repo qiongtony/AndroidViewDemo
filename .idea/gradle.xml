@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/hencoderl14_viewpager" />
             <option value="$PROJECT_DIR$/hencoderl18_rxjava" />
             <option value="$PROJECT_DIR$/hencoderwork" />
+            <option value="$PROJECT_DIR$/kotlindemo" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

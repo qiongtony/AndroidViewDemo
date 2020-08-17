@@ -16,4 +16,5 @@ class GenericDemo<T>{
             array1[i] = array2[i]
         }
     }
+
 }

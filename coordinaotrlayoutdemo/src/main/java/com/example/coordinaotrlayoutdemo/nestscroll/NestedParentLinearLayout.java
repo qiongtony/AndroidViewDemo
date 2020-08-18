@@ -56,7 +56,7 @@ public class NestedParentLinearLayout extends LinearLayout implements NestedScro
             // 求出可消费的滑动距离，顶部滑过了就不再消费了
             consumed[1] = Math.min(dy, targetTop - scrollY);
         }
-        // 下滑，列表的底部的位置与控件的底部位置
+        // 下滑，消费滑动距离，直到scrollY为0
         else if (dy < 0 && target.getScrollY() == 0){
             consumed[1] = Math.max(dy, -scrollY);
         }

@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SimpleBehaviorActivity"></activity>
         <activity android:name=".ScrollToPosActivity" />
         <activity android:name=".CoordinatorLayoutAndViewPagerActivity" />
         <activity android:name=".ToolbarWithCoordinatorLayoutActivity" />

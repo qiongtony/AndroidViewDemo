@@ -12,6 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 public class FollowBehavior extends CoordinatorLayout.Behavior<TextView> {
 
+    // 必须重写
     public FollowBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -42,5 +43,10 @@ public class FollowBehavior extends CoordinatorLayout.Behavior<TextView> {
         child.setX(dependency.getX());
         child.setY(dependency.getY() + 150);
         return true;
+    }
+
+    @Override
+    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull TextView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
+        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
     }
 }

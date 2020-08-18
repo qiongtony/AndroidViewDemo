@@ -27,5 +27,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_custom_simple_behavior).setOnClickListener {
             startActivity(Intent(this, SimpleBehaviorActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btn_nestscroll).setOnClickListener {
+            startActivity(Intent(this, NestedScrollViewActivity::class.java))
+        }
     }
 }

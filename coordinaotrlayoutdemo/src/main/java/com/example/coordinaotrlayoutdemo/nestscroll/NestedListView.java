@@ -2,7 +2,9 @@ package com.example.coordinaotrlayoutdemo.nestscroll;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -79,15 +81,36 @@ public class NestedListView extends ListView implements NestedScrollingChild2 {
                break;
            case MotionEvent.ACTION_MOVE:
              int tranlationY = (int) (mLastY - ev.getY());
+             mLastY = (int) ev.getY();
              // 先给父View看看是不是消费，父View消费完，自己在消费，自己消费不够，再给父View
                if (this.dispatchNestedPreScroll(0, tranlationY, mScrollConsumed, mScrollOffset, ViewCompat.TYPE_TOUCH)){
-                   scrollBy(0, tranlationY - mScrollConsumed[1]);
-//                   ev.offsetLocation(0, mScrollConsumed[1]);
-//                   tranlationY -= mScrollConsumed[1];
+                   ev.offsetLocation(0, tranlationY - mScrollConsumed[1]);
+                   return true;
+               }else{
+                   // 下滑，先自己消费，剩余的给父View消费
+                   if (tranlationY < 0){
+                       int delta = Math.max(tranlationY, -getActualScrollY());
+                       ev.offsetLocation(0, delta);
+                       Log.i("WWS", "子View先滑动 delta = " + delta + " tranlationY = " + tranlationY);
+                       dispatchNestedScroll(0, delta, 0,tranlationY - delta, mScrollOffset, ViewCompat.TYPE_TOUCH);
+                       if (delta >= 0){
+                           return true;
+                       }
+                   }
                }
             break;
 
         };
         return super.onTouchEvent(ev);
+    }
+
+    public int getActualScrollY() {
+        View c = getChildAt(0);
+        if (c == null) {
+            return 0;
+        }
+        int firstVisiblePosition = getFirstVisiblePosition();
+        int top = c.getTop();
+        return -top + firstVisiblePosition * c.getHeight() ;
     }
 }

@@ -4,9 +4,8 @@ android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
 
-
     defaultConfig {
-        applicationId "com.example.hencoder10taglayout"
+        applicationId "com.example.nestedscrolldemo"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -21,8 +20,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

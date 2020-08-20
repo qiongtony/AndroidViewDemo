@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/hencoderl18_rxjava" />
             <option value="$PROJECT_DIR$/hencoderwork" />
             <option value="$PROJECT_DIR$/kotlindemo" />
+            <option value="$PROJECT_DIR$/nestedscrolldemo" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

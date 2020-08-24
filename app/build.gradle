@@ -1,5 +1,38 @@
 apply plugin: 'com.android.application'
 
+//class Extension{
+//    def userName = "Author"
+//}
+//
+//class WuweishanPlugin implements Plugin<Project>{
+//    @Override
+//    void apply(Project target) {
+//        Extension extension = target.extensions.create('wuweishan', Extension)
+//        // 在配置添加完后才去获取extension的信息，因为引入plugin时所有的代码都会执行，而获取值需要等定义后拿
+//        target.afterEvaluate(new Action<Project>() {
+//            @Override
+//            void execute(Project project) {
+//                println "Hello:${extension.userName}"
+//            }
+//        })
+//    }
+//}
+
+// 引入该插件，这里才真正执行
+
+//apply plugin: WuweishanPlugin
+
+// 要在引入plugin之后声明？
+//wuweishan {
+//    userName "qiongtony"
+//}
+
+apply plugin: "myplugin"
+
+wuweishan {
+    userName 'qiongtony'
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"

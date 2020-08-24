@@ -1,0 +1,10 @@
+// 因为buildSrc早于project执行，所以添加仓库
+repositories {
+    google()
+    jcenter()
+
+}
+
+dependencies {
+    implementation 'com.android.tools.build:gradle:3.5.2'
+}

@@ -31,5 +31,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_nestscroll).setOnClickListener {
             startActivity(Intent(this, NestedScrollViewActivity::class.java))
         }
+        findViewById<Button>(R.id.btn_space).setOnClickListener {
+            startActivity(Intent(this, SpaceRvActivity::class.java))
+        }
     }
 }

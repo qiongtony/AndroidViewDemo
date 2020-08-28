@@ -56,4 +56,12 @@
         android:text="嵌套滑动"
         android:textColor="@android:color/black" />
 
+    <Button
+        android:id="@+id/btn_space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="GridLayoutManager加上间距"
+        android:textColor="@android:color/black" />
+
 </LinearLayout>

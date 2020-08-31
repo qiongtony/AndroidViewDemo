@@ -16,7 +16,7 @@ public class UserRepo {
 
     private static List<User> createUsers(){
         List<User> users = new ArrayList<>();
-        for (int i = 0; i < 20; i++){
+        for (int i = 0; i < 6; i++){
             User user = new User("这是第" + i + "个item");
             users.add(user);
         }

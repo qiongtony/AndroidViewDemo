@@ -15,10 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.coordinaotrlayoutdemo.adapter.MyAdapter;
 import com.example.coordinaotrlayoutdemo.decoration.DividerItemDecoration;
+import com.example.coordinaotrlayoutdemo.layoutmanager.BottomSpaceLayoutManager;
 
 public class ScrollToPosActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private LinearLayoutManager mLayoutManager;
+    private BottomSpaceLayoutManager mLayoutManager;
     private int scrollY = 0;
 
     public static void start(Context context){
@@ -48,7 +49,7 @@ public class ScrollToPosActivity extends AppCompatActivity {
         });
 
         recyclerView = findViewById(R.id.recycler);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -56,11 +57,14 @@ public class ScrollToPosActivity extends AppCompatActivity {
                 scrollY += dy;
             }
         });
+        MyAdapter adapter = new MyAdapter(this);
+        mLayoutManager = new BottomSpaceLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mLayoutManager.attachAdapter(adapter);
+        mLayoutManager.setHeaderItemCount(4);
 //        mLayoutManager = new  LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+//        mLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        MyAdapter adapter = new MyAdapter(this);
         recyclerView.setAdapter(adapter);
     }
 

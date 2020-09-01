@@ -202,13 +202,18 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                 if (dy > 0){
                     // 顶部离开屏幕的View，回收
                     if (getDecoratedBottom(child) - dy < topOffset){
+                        // 该方式快速滑动只会调用少量的itemView,相比起来效率更高
+                        // itemView添加到mCachedViews列表内
                         removeAndRecycleView(child, recycler);
+                        // 使用该方式createViewHolder的调用次数为itemCount
+//                        detachAndScrapView(child, recycler);
                         mFirstVisiblePos++;
                     }
                 }else if (dy < 0){
                     // 回收当前屏幕，下越界的View
                     if (getDecoratedTop(child) - dy > getHeight() - getPaddingBottom()){
                         removeAndRecycleView(child, recycler);
+//                        detachAndScrapView(child, recycler);
                         mLastVisiblePos--;
                     }
                 }

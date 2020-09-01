@@ -10,6 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 支持item不同大小的流式LayoutManager
+ * 包含两个过程：
+ * 1、初始类似自定义ViewGroup的layout过程，区别是只需要layout一屏幕的View；
+ * 2、滑动：这里有两个操作：第一步是把不在屏幕的View的移除掉；
+ *                        第二步layout：上滑，从当前最后的子View开始往下顺序的add；
+ *                                     下滑，从当前第一个子View开始往上逆序的add；（这里主要的难点是保证和顺序时layout的位置保持一样，当前的处理是用顺序保存的位置来layout逆序的位置）
  */
 public class FlowLayoutManager extends RecyclerView.LayoutManager {
     private int mVerticalOffset;// 竖直偏移量
@@ -41,7 +46,7 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         if (getChildCount() == 0 && state.isPreLayout()){
             return;
         }
-
+        Log.i("WWS", "onLayoutChildren");
         // 缓存ItemView
         detachAndScrapAttachedViews(recycler);
 
@@ -53,6 +58,17 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         fill(recycler, state);
     }
 
+
+    /**
+     * 填充整屏幕的View：过程和竖直LinearLayout的测量和布局过程是类似的，先measure出子View的尺寸，然后按规则去layout
+     * 1、获取子View，测量宽高；
+     * 2、布局：
+     *                  a、该行排下的话，就往右排，比较得出本行item最高的height，用于转行；
+     *                  b、转行：转行后的View的bottom到RV的底了，铺满一屏幕了后面的View不需要测量和布局了
+     *                          View没到底，从行头开始layout
+     * @param recycler
+     * @param state
+     */
     private void fill(RecyclerView.Recycler recycler, RecyclerView.State state){
         int topOffset = getPaddingTop();
         int leftOffset = getPaddingLeft();
@@ -138,12 +154,11 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         if (dy == 0 || getChildCount() == 0){
             return 0;
         }
-        Log.i("WWS", "dy = " + dy);
-        int readlOffset = dy;// 实际滑动的距离,可能会在边界处被修正
-        // 到上边界了，就不要滑这么多了
-        if (mVerticalOffset + readlOffset < 0){
-            readlOffset = -mVerticalOffset;
-        }else if (readlOffset > 0){
+        int realOffset = dy;// 实际滑动的距离,可能会在边界处被修正
+        // 下滑时要超过顶部了，此时修正一下需要滑动的距离，不要滑这么多
+        if (mVerticalOffset + realOffset < 0){
+            realOffset = -mVerticalOffset;
+        }else if (realOffset > 0){
             // 下边界
             View lastChild = getChildAt(getChildCount() - 1);
             if (getPosition(lastChild) == getItemCount() -1){
@@ -151,21 +166,21 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                 int gap = getHeight() - getPaddingBottom() - getDecoratedBottom(lastChild);
                 // 大于0，说明还要往下移一点
                 if (gap > 0){
-                    readlOffset = -gap;
+                    realOffset = -gap;
                 }else {
                     // 超了，则取小的保证移动贴底
-                    readlOffset = Math.min(readlOffset, -gap);
+                    realOffset = Math.min(realOffset, -gap);
                 }
             }
         }
         // 先填充，再位移
-        readlOffset = fill(recycler, state, readlOffset);
+        realOffset = fill(recycler, state, realOffset);
 
         // 已滑动的距离
-        mVerticalOffset += readlOffset;
+        mVerticalOffset += realOffset;
         // 滑动所有的childView，这个距离是实际滑动的距离
-        offsetChildrenVertical(-readlOffset);
-        return readlOffset;
+        offsetChildrenVertical(-realOffset);
+        return realOffset;
     }
 
     /**
@@ -181,7 +196,7 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         int topOffset = getPaddingTop();
         // 回收越界子View
         if (getChildCount() > 0){
-            // 为什么要从下往上找，而不是从0开始呢？
+            // 为什么要从下往上找，而不是从0开始呢？从后面开始remove，前面的index还是保持不变的，从0开始childCount会不断变小
             for (int i = getChildCount() - 1; i >= 0; i--){
                 View child =getChildAt(i);
                 if (dy > 0){
@@ -189,7 +204,6 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                     if (getDecoratedBottom(child) - dy < topOffset){
                         removeAndRecycleView(child, recycler);
                         mFirstVisiblePos++;
-                        continue;
                     }
                 }else if (dy < 0){
                     // 回收当前屏幕，下越界的View
@@ -208,6 +222,7 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         if (dy >= 0){
             int minPos = mFirstVisiblePos;
             mLastVisiblePos = getItemCount() - 1;
+            // 上滑，从最后一个可见item开始顺序往下排
             if (getChildCount() > 0){
                 View lastView = getChildAt(getChildCount() - 1);
                 minPos = getPosition(lastView) + 1; // 从最后一个View+1开始
@@ -261,13 +276,13 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                 }
             }
         }else{
+            // 下滑，从第一个可见的item，开始逆序addView，不断往前插
                 int maxPos = getItemCount() - 1;
                 mFirstVisiblePos = 0;
                 if (getChildCount() > 0){
                     maxPos = getPosition(getChildAt(0)) - 1;
                 }
                 for (int i = maxPos; i >= mFirstVisiblePos; i--){
-                    Log.i("WWS", "maxPos = " + maxPos + " pos = " + i + " mVerticalOffset = " + mVerticalOffset);
                     Rect rect = mItemRects.get(i);
                     // 到顶了，不用layout了
                     if ((rect.bottom - mVerticalOffset - dy) < getPaddingTop()){

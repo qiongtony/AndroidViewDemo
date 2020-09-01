@@ -41,6 +41,7 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         if (getChildCount() == 0 && state.isPreLayout()){
             return;
         }
+
         // 缓存ItemView
         detachAndScrapAttachedViews(recycler);
 
@@ -61,7 +62,6 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         // 先测试，所以全部都展示
         mLastVisiblePos = getItemCount() - 1;
         for (int i = minPos; i <= mLastVisiblePos; i++){
-            Log.i("WWS", "pos = " + i);
             // 取出ItemView，可能是从缓存或onCreateView获取的
             View child = recycler.getViewForPosition(i);
             addView(child);
@@ -70,6 +70,8 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
             // 当前行可以排下
             if (leftOffset + getDecoratedMeasurementHorizontal(child) <= getHorizontalSpace()){
                 layoutDecoratedWithMargins(child, leftOffset, topOffset, leftOffset + getDecoratedMeasurementHorizontal(child), topOffset + getDecoratedMeasurementVertical(child));
+                Rect rect = new Rect(leftOffset, topOffset + mVerticalOffset, leftOffset + getDecoratedMeasurementHorizontal(child), topOffset + mVerticalOffset +  getDecoratedMeasurementVertical(child));
+                mItemRects.append(i, rect);
 
                 leftOffset += getDecoratedMeasurementHorizontal(child);
                 lineMaxHeight = Math.max(lineMaxHeight, getDecoratedMeasurementVertical(child));
@@ -85,6 +87,8 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                     mLastVisiblePos = i - 1;
                 }else {
                     layoutDecoratedWithMargins(child, leftOffset, topOffset, leftOffset + getDecoratedMeasurementHorizontal(child), topOffset + getDecoratedMeasurementVertical(child));
+                    Rect rect = new Rect(leftOffset, topOffset + mVerticalOffset, leftOffset + getDecoratedMeasurementHorizontal(child), topOffset + mVerticalOffset +  getDecoratedMeasurementVertical(child));
+                    mItemRects.append(i, rect);
 
                     leftOffset += getDecoratedMeasurementHorizontal(child);
                     lineMaxHeight = Math.max(lineMaxHeight, getDecoratedMeasurementVertical(child));
@@ -188,7 +192,11 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                         continue;
                     }
                 }else if (dy < 0){
-
+                    // 回收当前屏幕，下越界的View
+                    if (getDecoratedTop(child) - dy > getHeight() - getPaddingBottom()){
+                        removeAndRecycleView(child, recycler);
+                        mLastVisiblePos--;
+                    }
                 }
             }
         }
@@ -196,13 +204,14 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         int leftOffset = getPaddingLeft();
         int lineMaxHeight = 0;
         // layout子View
+        Log.i("WWS", "mFirstVisiblePos = " + mFirstVisiblePos + " childCount = " + getChildCount());
         if (dy >= 0){
             int minPos = mFirstVisiblePos;
             mLastVisiblePos = getItemCount() - 1;
             if (getChildCount() > 0){
                 View lastView = getChildAt(getChildCount() - 1);
                 minPos = getPosition(lastView) + 1; // 从最后一个View+1开始
-                // FIXME:这里为什么这么处理？
+                // FIXME:这里为什么这么处理，其实就是不从空白开始，从当前最后一个View的rightTop开始layout
                 topOffset = getDecoratedTop(lastView);
                 leftOffset = getDecoratedRight(lastView);
                 lineMaxHeight = Math.max(lineMaxHeight, getDecoratedMeasurementVertical(lastView));
@@ -221,12 +230,12 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                         leftOffset += getDecoratedMeasurementHorizontal(child);
                         lineMaxHeight = Math.max(lineMaxHeight, getDecoratedMeasurementVertical(child));
                     }else{
-                        // 当前行排不下
+                        // 当前行排不下，转行
                         leftOffset = getPaddingLeft();
                         topOffset = topOffset + lineMaxHeight;
 
                         lineMaxHeight = 0;
-                        // 新起一行，判断有没有到底，到底的话移除View并回收，循环结束
+                        // 判断有没有到底，到底的话移除View并回收，循环结束，如果itemView的高度不一样的话不应该这么判断吧？这个最简单的就是不管，好像也符合直觉
                         if (topOffset > getHeight() - getPaddingBottom()){
                             removeAndRecycleView(child, recycler);
                             mLastVisiblePos = i - 1;
@@ -242,7 +251,7 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                     }
                 }
 
-                // FIXME:这里不明白是什么意思
+                // FIXME:这里不明白是什么意思，已经layout完了，如果最后一个没到底的时候不能再滑下去了
                 View lastChild = getChildAt(getChildCount() - 1);
                 if (getPosition(lastChild) == getItemCount() -1){
                     int gap = getHeight() - getPaddingBottom() - getDecoratedBottom(lastChild);
@@ -252,7 +261,27 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
                 }
             }
         }else{
+                int maxPos = getItemCount() - 1;
+                mFirstVisiblePos = 0;
+                if (getChildCount() > 0){
+                    maxPos = getPosition(getChildAt(0)) - 1;
+                }
+                for (int i = maxPos; i >= mFirstVisiblePos; i--){
+                    Log.i("WWS", "maxPos = " + maxPos + " pos = " + i + " mVerticalOffset = " + mVerticalOffset);
+                    Rect rect = mItemRects.get(i);
+                    // 到顶了，不用layout了
+                    if ((rect.bottom - mVerticalOffset - dy) < getPaddingTop()){
+                        mFirstVisiblePos = i + 1;
+                        break;
+                    }else {
+                        View view = recycler.getViewForPosition(i);
+                        // 添加到最前面
+                        addView(view, 0);
+                        measureChildWithMargins(view, 0, 0);
+                        layoutDecoratedWithMargins(view, rect.left, rect.top - mVerticalOffset, rect.right, rect.bottom - mVerticalOffset);
 
+                    }
+                }
         }
         return dy;
     }

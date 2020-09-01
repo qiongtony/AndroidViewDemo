@@ -34,5 +34,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_space).setOnClickListener {
             startActivity(Intent(this, SpaceRvActivity::class.java))
         }
+        findViewById<Button>(R.id.btn_flow_layoutmanager).setOnClickListener {
+            startActivity(Intent(this, CustomLayoutManagerActivity::class.java))
+        }
     }
 }

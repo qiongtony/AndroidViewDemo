@@ -1,3 +1,4 @@
+include ':annotiondemo'
 include ':nestedscrolldemo'
 include ':kotlindemo'
 include ':hencoderL19_IO'

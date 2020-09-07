@@ -4,6 +4,10 @@
     <bytecodeTargetLevel>
       <module name="buildSrc" target="1.7" />
       <module name="hencoderL19_IO" target="1.7" />
+      <module name="hencoderL27_annotation" target="1.7" />
+      <module name="hencoderL27_processorLib" target="1.7" />
+      <module name="hencoderL28_lib_annotation" target="1.7" />
+      <module name="hencoderL28_lib_processor" target="1.7" />
       <module name="KotlinLeanLib" target="1.7" />
     </bytecodeTargetLevel>
   </component>

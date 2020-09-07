@@ -1,3 +1,7 @@
+include ':hencoderL28_lib'
+include ':hencoderL28_lib_processor'
+include ':hencoderL28_lib_annotation'
+include ':hencoderl28_annotation_processor'
 include ':annotiondemo'
 include ':nestedscrolldemo'
 include ':kotlindemo'

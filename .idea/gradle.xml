@@ -22,8 +22,12 @@
             <option value="$PROJECT_DIR$/hencoder12_scalableimageview" />
             <option value="$PROJECT_DIR$/hencoderL13multitouch" />
             <option value="$PROJECT_DIR$/hencoderL19_IO" />
+            <option value="$PROJECT_DIR$/hencoderL28_lib" />
+            <option value="$PROJECT_DIR$/hencoderL28_lib_annotation" />
+            <option value="$PROJECT_DIR$/hencoderL28_lib_processor" />
             <option value="$PROJECT_DIR$/hencoderl14_viewpager" />
             <option value="$PROJECT_DIR$/hencoderl18_rxjava" />
+            <option value="$PROJECT_DIR$/hencoderl28_annotation_processor" />
             <option value="$PROJECT_DIR$/hencoderwork" />
             <option value="$PROJECT_DIR$/kotlindemo" />
             <option value="$PROJECT_DIR$/nestedscrolldemo" />

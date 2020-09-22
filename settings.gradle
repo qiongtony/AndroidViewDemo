@@ -1,3 +1,4 @@
+include ':customlayoutmanagerdemo'
 include ':hencoderL28_lib'
 include ':hencoderL28_lib_processor'
 include ':hencoderL28_lib_annotation'

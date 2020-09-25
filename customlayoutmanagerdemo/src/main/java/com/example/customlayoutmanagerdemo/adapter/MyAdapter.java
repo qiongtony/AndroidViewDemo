@@ -1,4 +1,4 @@
-package com.example.customlayoutmanagerdemo;
+package com.example.customlayoutmanagerdemo.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.customlayoutmanagerdemo.ItemConfigure;
+import com.example.customlayoutmanagerdemo.R;
+import com.example.customlayoutmanagerdemo.bean.AudioLinesItem;
+import com.example.customlayoutmanagerdemo.repo.AudioLinesRepos;
 
 import java.util.List;
 
@@ -30,18 +35,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-        if (position == 0){
-            params.leftMargin =
-            ItemConfigure.getDefault().getBorderItemHorizontalMargin();
-        }else{
-            params.leftMargin = 0;
-        }
-        if (position == (getItemCount() - 1)){
-            params.rightMargin =
-                    ItemConfigure.getDefault().getBorderItemHorizontalMargin();
-        }else{
-            params.rightMargin = 0;
-        }
+//        if (position == 0){
+//            params.leftMargin =
+//            ItemConfigure.getDefault().getBorderItemHorizontalMargin();
+//        }else{
+//            params.leftMargin = 0;
+//        }
+//        if (position == (getItemCount() - 1)){
+//            params.rightMargin =
+//                    ItemConfigure.getDefault().getBorderItemHorizontalMargin();
+//        }else{
+//            params.rightMargin = 0;
+//        }
         holder.tvContent.setText(mDatas.get(position).getLines());
     }
 
@@ -61,6 +66,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
 //                    (int) (ScreenUtil.getScreenWidth() * 0.87f)
                 getItemWidth()
             ;
+
 
         }
     }

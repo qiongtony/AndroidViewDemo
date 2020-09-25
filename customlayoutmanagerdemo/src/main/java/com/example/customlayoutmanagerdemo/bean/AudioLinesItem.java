@@ -1,4 +1,4 @@
-package com.example.customlayoutmanagerdemo;
+package com.example.customlayoutmanagerdemo.bean;
 
 public class AudioLinesItem {
     private long id;

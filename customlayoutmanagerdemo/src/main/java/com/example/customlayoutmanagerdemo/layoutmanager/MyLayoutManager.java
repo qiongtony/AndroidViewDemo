@@ -1,11 +1,14 @@
-package com.example.customlayoutmanagerdemo;
+package com.example.customlayoutmanagerdemo.layoutmanager;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.customlayoutmanagerdemo.ItemConfigure;
 
 public class MyLayoutManager extends LinearLayoutManager {
 
@@ -39,8 +42,19 @@ public class MyLayoutManager extends LinearLayoutManager {
     }
 
     private void updateAnimation(RecyclerView.Recycler recycler) {
+        for (int i = 0; i < getChildCount();i++){
+            View child = getChildAt(i);
+            if (child != null) {
+                child.setPivotY(child.getHeight() / 2);
+                child.setPivotX(child.getWidth() / 2);
+                child.setScaleX(ItemConfigure.getDefault().getMinScale());
+                child.setScaleY(ItemConfigure.getDefault().getMinScale());
+            }
+        }
         int targetPos = (int) Math.floor(mScrollOffset / getOneScreenWidth());
         float scale = mScrollOffset % getOneScreenWidth() * 1f / getOneScreenWidth();
+
+        Log.i("WWS", "mScrollOffset = " + mScrollOffset + " targetPos = " + targetPos + " scale = " + scale);
 
         for (int i = -1; i < 2; i++) {
             if (i == 0) {
@@ -76,6 +90,10 @@ public class MyLayoutManager extends LinearLayoutManager {
         // 因为float值有时没办法刚好到1.0，而可能是0.9999，所以要在停下来的时候修正一下
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
             int pos = findFirstCompletelyVisibleItemPosition();
+            // 找不到就不改了，不然会出现其他问题
+            if (pos == RecyclerView.NO_POSITION){
+                return;
+            }
             mScrollOffset = pos * getOneScreenWidth();
             updateAnimation(null);
         }

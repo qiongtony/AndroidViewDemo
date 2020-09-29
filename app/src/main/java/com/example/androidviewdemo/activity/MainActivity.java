@@ -1,4 +1,4 @@
-package com.example.androidviewdemo;
+package com.example.androidviewdemo.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.androidviewdemo.R;
 import com.example.androidviewdemo.util.ScreenUtil;
 import com.example.androidviewdemo.view.BulletView;
 
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ClassSevenTestActivity.class);
                 startActivity(intent);
             }
+        });
+        findViewById(R.id.btnJumpExpanableTextPage).setOnClickListener(v -> {
+            ExpanableTextActivity.start(MainActivity.this);
         });
     }
 

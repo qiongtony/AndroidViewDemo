@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".activity.ExpanableTextActivity">
+    <com.example.androidviewdemo.view.MyExpandableTextView
+        android:id="@+id/tvTopic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:open_topic_mode="false"
+        app:metv_maxLines="2"
+        app:expand_text_color="@android:color/holo_blue_light"
+        app:pack_up_text_color="@android:color/holo_blue_light"
+        android:text="好嗨哟（表达很高兴和兴奋的状态）.#好嗨哟#（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）" />
+
+    <Button
+        android:id="@+id/btnChangeContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="设置文本"
+        />
+</LinearLayout>

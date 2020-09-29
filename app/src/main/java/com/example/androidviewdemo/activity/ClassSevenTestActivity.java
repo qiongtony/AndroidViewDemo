@@ -1,8 +1,10 @@
-package com.example.androidviewdemo;
+package com.example.androidviewdemo.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.androidviewdemo.R;
 
 /**
  * 第七节作业

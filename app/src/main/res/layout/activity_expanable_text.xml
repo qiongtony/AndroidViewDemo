@@ -6,16 +6,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activity.ExpanableTextActivity">
-    <com.example.androidviewdemo.view.MyExpandableTextView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.example.androidviewdemo.view.ExpandableTitleTextView
         android:id="@+id/tvTopic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:open_topic_mode="false"
+        app:open_topic_mode="true"
         app:metv_maxLines="2"
+        android:visibility="visible"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textSize="14sp"
+        app:expand_text_size="12sp"
+        android:background="@android:color/holo_orange_light"
         app:expand_text_color="@android:color/holo_blue_light"
-        app:pack_up_text_color="@android:color/holo_blue_light"
-        android:text="好嗨哟（表达很高兴和兴奋的状态）.#好嗨哟#（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）" />
+        app:title_text_color="@color/colorAccent"
+        tools:text="好嗨哟（表达很高兴和兴奋的状态）.#好嗨哟#（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）" />
 
     <Button
         android:id="@+id/btnChangeContent"

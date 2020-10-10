@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.StaticLayout;
@@ -14,6 +13,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
@@ -35,11 +35,14 @@ import java.util.List;
  * 支持自定义展开/收起的文案、字体颜色
  * 支持话题内容高亮，可开启或关闭
  * 展开/收起点击事件
+ * <p>
+ * TIP：如果监听了点击事件，则点击话题或展示/收起也会触发，与普通内容的点击不是互斥的
  */
-public class MyExpandableTextView extends AppCompatTextView {
-    private static final String TAG = MyExpandableTextView.class.getSimpleName();
+public class ExpandableTitleTextView extends AppCompatTextView {
+    private static final String TAG = ExpandableTitleTextView.class.getSimpleName();
     // 默认,话题文本高亮颜色
     private static final int FOREGROUND_COLOR = Color.parseColor("#4488ff");
+    private static final int EXPAND_COLOR = Color.parseColor("#ffffff");
     private static final int MAX_LINES = 2;
     private static final String EXPAND_TEXT = "..点击展开";
     private static final String PACK_UP_TEXT = "收起";
@@ -61,59 +64,73 @@ public class MyExpandableTextView extends AppCompatTextView {
      * 展开文案
      */
     private String expandText;
+    private float mExpandTextSize;
     /**
      * 收起文案
      */
     private String packUpText;
+    private float mPackUpTextSize;
 
     /**
      * 展开文案的color
      */
-    private @ColorInt int expandTextColor;
+    private @ColorInt
+    int expandTextColor;
     /**
      * 收起文案的color
      */
-    private @ColorInt int packUpTextColor;
+    private @ColorInt
+    int packUpTextColor;
     private String message;
 
     private OnExpandAndPackUpListener mExpandAndPackUpListener;
 
-    public MyExpandableTextView(@NonNull Context context) {
+    private StaticLayout mLastStaticLayout;
+    private String mLastCharSequence;
+
+    public ExpandableTitleTextView(@NonNull Context context) {
         super(context);
     }
 
-    public MyExpandableTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ExpandableTitleTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public MyExpandableTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ExpandableTitleTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
 
     private void init(AttributeSet attrs) {
-        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.MyExpandableTextView);
+        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.ExpandableTitleTextView);
 
-        maxLines = ta.getInt(R.styleable.MyExpandableTextView_metv_maxLines, MAX_LINES);
+        maxLines = ta.getInt(R.styleable.ExpandableTitleTextView_metv_maxLines, MAX_LINES);
 
-        if (ta.hasValue(R.styleable.MyExpandableTextView_expand_text)) {
-            expandText = ta.getString(R.styleable.MyExpandableTextView_expand_text);
+        if (ta.hasValue(R.styleable.ExpandableTitleTextView_expand_text)) {
+            expandText = ta.getString(R.styleable.ExpandableTitleTextView_expand_text);
         } else {
             expandText = EXPAND_TEXT;
         }
-        if (ta.hasValue(R.styleable.MyExpandableTextView_expand_text_color)) {
-            expandTextColor = ta.getColor(R.styleable.MyExpandableTextView_expand_text_color, Color.WHITE);
-        }
 
-        if (ta.hasValue(R.styleable.MyExpandableTextView_pack_up_text)) {
-            packUpText = ta.getString(R.styleable.MyExpandableTextView_pack_up_text);
+        expandTextColor = ta.getColor(R.styleable.ExpandableTitleTextView_expand_text_color, EXPAND_COLOR);
+        mExpandTextSize = ta.getDimension(R.styleable.ExpandableTitleTextView_expand_text_size, getTextSize());
+
+        mForegroundColor = ta.getColor(R.styleable.ExpandableTitleTextView_title_text_color, FOREGROUND_COLOR);
+
+        if (ta.hasValue(R.styleable.ExpandableTitleTextView_pack_up_text)) {
+            packUpText = ta.getString(R.styleable.ExpandableTitleTextView_pack_up_text);
         } else {
             packUpText = PACK_UP_TEXT;
         }
-        packUpTextColor = ta.getColor(R.styleable.MyExpandableTextView_pack_up_text_color, Color.WHITE);
+        if (ta.hasValue(R.styleable.ExpandableTitleTextView_pack_up_text_color)) {
+            packUpTextColor = ta.getColor(R.styleable.ExpandableTitleTextView_pack_up_text_color, EXPAND_COLOR);
+        } else {
+            packUpTextColor = expandTextColor;
+        }
+        mPackUpTextSize = ta.getDimension(R.styleable.ExpandableTitleTextView_pack_up_text_size, mExpandTextSize);
 
-        openTopicMode = ta.getBoolean(R.styleable.MyExpandableTextView_open_topic_mode, true);
+        openTopicMode = ta.getBoolean(R.styleable.ExpandableTitleTextView_open_topic_mode, true);
         ta.recycle();
 
         setMovementMethod(LinkMovementMethod.getInstance());
@@ -136,10 +153,10 @@ public class MyExpandableTextView extends AppCompatTextView {
 
             @Override
             public synchronized void afterTextChanged(Editable editablede) {
-                if (editablede == null){
+                if (editablede == null) {
                     return;
                 }
-                if (!openTopicMode){
+                if (!openTopicMode) {
                     return;
                 }
                 refreshEditTextUI(editablede.toString());
@@ -153,10 +170,10 @@ public class MyExpandableTextView extends AppCompatTextView {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        if (contentWidth != w - getPaddingLeft() - getPaddingRight()) {
-            contentWidth = w - getPaddingLeft() - getPaddingRight();
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (contentWidth != getMeasuredWidth() - getPaddingLeft() - getPaddingRight()) {
+            contentWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
             initAction();
         }
     }
@@ -167,10 +184,12 @@ public class MyExpandableTextView extends AppCompatTextView {
 
     /**
      * 初始化
-     * @param expand        显示什么样式的UI，true：展开样式；false：收起样式
+     *
+     * @param expand 显示什么样式的UI，true：展开样式；false：收起样式
      */
     public void initAction(boolean expand) {
         if (contentWidth == 0 || TextUtils.isEmpty(message)) {
+            Log.e(TAG, "initAction return as contentWidth is zero or message is empty");
             return;
         }
         if (expand) {
@@ -187,11 +206,13 @@ public class MyExpandableTextView extends AppCompatTextView {
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         if (getStaticLayout(message).getLineCount() > maxLines) {
             ssb.append(message);
+            int startIndex = ssb.length();
             ssb.append(getEndString(false));
             initClick(ssb, false);
-            setText(ssb);
+            ssb.setSpan(new AbsoluteSizeSpan((int) mPackUpTextSize), startIndex, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            setTextDelay(ssb);
         } else {
-            setText(message);
+            setTextDelay(message);
         }
     }
 
@@ -201,30 +222,37 @@ public class MyExpandableTextView extends AppCompatTextView {
     private void packUp() {
         if (getStaticLayout(message).getLineCount() > maxLines) {
             SpannableStringBuilder ssb = getSpannableString();
-
             initClick(ssb, true);
-            setText(ssb);
+            setTextDelay(ssb);
         } else {
-            setText(message);
+            setTextDelay(message);
         }
     }
 
+    private void setTextDelay(CharSequence text) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                setText(text);
+            }
+        });
+    }
+
     /**
-     *
      * @param ssb
-     * @param open  点击后是什么状态，true为展开，false为收起
+     * @param open 点击后是什么状态，true为展开，false为收起
      */
     private void initClick(SpannableStringBuilder ssb, boolean open) {
         int startIndex = ssb.length() - getEndString(open).length();
         ssb.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                if (mExpandAndPackUpListener == null){
+                if (mExpandAndPackUpListener == null) {
                     return;
                 }
-                if (open){
+                if (open) {
                     mExpandAndPackUpListener.clickExpand();
-                }else{
+                } else {
                     mExpandAndPackUpListener.clickPackUp();
                 }
             }
@@ -238,8 +266,13 @@ public class MyExpandableTextView extends AppCompatTextView {
     }
 
     private StaticLayout getStaticLayout(CharSequence text) {
-        return new StaticLayout(text, getPaint(), contentWidth, Layout.Alignment.ALIGN_NORMAL, getLineSpacingMultiplier(),
+        if (!TextUtils.isEmpty(text) && text.toString().equals(mLastCharSequence)) {
+            return mLastStaticLayout;
+        }
+        mLastCharSequence = text.toString();
+        mLastStaticLayout = new StaticLayout(text, getPaint(), contentWidth, Layout.Alignment.ALIGN_NORMAL, getLineSpacingMultiplier(),
                 getLineSpacingExtra(), getIncludeFontPadding());
+        return mLastStaticLayout;
     }
 
     private SpannableStringBuilder getSpannableString() {
@@ -249,7 +282,10 @@ public class MyExpandableTextView extends AppCompatTextView {
         int endIndex = getStaticLayout(message).getOffsetForHorizontal(maxLines - 1, offset);
 
         ssb.append(message.subSequence(0, endIndex));
-        ssb.append(endString, new ForegroundColorSpan(expandTextColor), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        int start = ssb.length();
+        ssb.append(endString);
+        ssb.setSpan(new ForegroundColorSpan(expandTextColor), start, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new AbsoluteSizeSpan((int) mExpandTextSize), start, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
         while (getStaticLayout(ssb).getLineCount() > maxLines) {
@@ -369,7 +405,7 @@ public class MyExpandableTextView extends AppCompatTextView {
         void onClick(String topic);
     }
 
-    public interface OnExpandAndPackUpListener{
+    public interface OnExpandAndPackUpListener {
         /**
          * 点击展开
          */

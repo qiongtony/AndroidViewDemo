@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.androidviewdemo.view.ExpandableTitleTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:expand_text_color="@android:color/holo_blue_light"
+    app:metv_maxLines="2"
+    android:textSize="14sp"
+    app:expand_text_size="12sp"
+    app:open_topic_mode="true"
+    app:title_text_color="@color/colorAccent"
+    tools:text="好嗨哟（表达很高兴和兴奋的状态）.#好嗨哟#（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）.好嗨哟（表达很高兴和兴奋的状态）" />

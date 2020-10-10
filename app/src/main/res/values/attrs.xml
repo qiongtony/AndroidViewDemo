@@ -12,7 +12,8 @@
         <attr name="innerBackground" format="reference" />
     </declare-styleable>
         
-    <declare-styleable name="MyExpandableTextView">
+    <declare-styleable name="ExpandableTitleTextView">
+        <!--收起文案样式展示优先级：手动设置>展开样式-->
         <!--未展开状态的最大显示行数-->
         <attr name="metv_maxLines" format="integer"/>
         <!--展开文案-->
@@ -21,9 +22,15 @@
         <attr name="pack_up_text" format="string" />
         <!--展开文案的color-->
         <attr name="expand_text_color" format="color|reference"/>
+        <!--展开文案的字体大小-->
+        <attr name="expand_text_size" format="dimension|reference"/>
         <!--收起文案的color-->
-        <attr name="pack_up_text_color" format="color"/>
+        <attr name="pack_up_text_color" format="color|reference"/>
+        <!--收起文案的字体大小-->
+        <attr name="pack_up_text_size" format="dimension|reference"/>
         <!--启动话题模式，高亮话题且可点击-->
         <attr name="open_topic_mode" format="boolean"/>
+        <!--话题的字体颜色-->
+        <attr name="title_text_color" format="color|reference" />
     </declare-styleable>
 </resources>

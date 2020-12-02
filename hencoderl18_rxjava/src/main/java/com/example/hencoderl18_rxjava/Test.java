@@ -13,6 +13,7 @@ import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -125,5 +126,26 @@ class Test {
                         LogUtilsKt.i("onError e = " + e.getMessage());
                     }
                 });
+    }
+
+    public void singleTest(){
+        Single.just(1).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Throwable {
+                        LogUtilsKt.i("doOnSuccess integer = " + integer + " name = " + Thread.currentThread().getName());
+                    }
+                }).doFinally(new Action() {
+            @Override
+            public void run() throws Throwable {
+                LogUtilsKt.i("doFinally name = " + Thread.currentThread().getName());
+            }
+        }).doAfterTerminate(new Action() {
+            @Override
+            public void run() throws Throwable {
+                LogUtilsKt.i("doAfterTerminate name = " + Thread.currentThread().getName());
+            }
+        }).subscribe();
     }
 }

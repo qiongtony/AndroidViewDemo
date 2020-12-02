@@ -16,5 +16,6 @@ class MainActivity : AppCompatActivity() {
         Observable.interval(1, TimeUnit.SECONDS).subscribe { t: Long? -> {
             Log.i("WWS", "value = ${t}")
         } }
+        test.singleTest()
     }
 }

@@ -14,7 +14,7 @@ class FriendsAdapter() : RecyclerView.Adapter<FriendsAdapter.FriendsHolder>(){
     val list by lazy {
         FriendReposity.list
     }
-    class FriendsHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    open class FriendsHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val tvName by lazy {
             itemView.findViewById<TextView>(R.id.tv_name)
         }

@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/KotlinLeanLib" />
+            <option value="$PROJECT_DIR$/adaptivelayoutdemo" />
             <option value="$PROJECT_DIR$/annotiondemo" />
             <option value="$PROJECT_DIR$/aopdemo" />
             <option value="$PROJECT_DIR$/app" />

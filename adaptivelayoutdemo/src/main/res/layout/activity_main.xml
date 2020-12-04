@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.adaptivelayoutdemo.CustomConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_width="match_parent"
+            android:text="测试Fragment自适应变化"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/container_view"
+            android:layout_height="0dp"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/container_view"
+            android:layout_width="match_parent"
+            android:minHeight="300dp"
+            android:maxHeight="400dp"
+            android:name="com.example.adaptivelayoutdemo.RvFragment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="300dp"/>
+
+</com.example.adaptivelayoutdemo.CustomConstraintLayout>

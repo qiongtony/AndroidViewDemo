@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-        <Button
+        <TextView
             android:id="@+id/btn_test"
             android:layout_width="match_parent"
             android:text="测试Fragment自适应变化"
@@ -16,10 +16,9 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/container_view"
             android:layout_width="match_parent"
-            android:minHeight="300dp"
             android:maxHeight="400dp"
             android:name="com.example.adaptivelayoutdemo.RvFragment"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_height="300dp"/>
+            android:layout_height="238dp"/>
 
 </com.example.adaptivelayoutdemo.CustomConstraintLayout>

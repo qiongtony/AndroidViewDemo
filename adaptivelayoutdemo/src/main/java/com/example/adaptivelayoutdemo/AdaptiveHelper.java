@@ -22,8 +22,9 @@ public class AdaptiveHelper {
     private NestedScrollingParentHelper mHelper;
     private View mTargetView;
 
-    public AdaptiveHelper(ViewGroup root, int maxHeight, boolean needShorten) {
+    public AdaptiveHelper(ViewGroup root, int maxHeight, int minHeight, boolean needShorten) {
         mMaxHeight = maxHeight;
+        mMinHeight = minHeight;
         this.needShorten = needShorten;
         mHelper = new NestedScrollingParentHelper(root);
     }
@@ -105,5 +106,14 @@ public class AdaptiveHelper {
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public void init(){
+        if (mTargetView == null){
+            return;
+        }
+        ViewGroup.LayoutParams layoutParams = mTargetView.getLayoutParams();
+        layoutParams.height = mMinHeight;
+        mTargetView.setLayoutParams(layoutParams);
     }
 }

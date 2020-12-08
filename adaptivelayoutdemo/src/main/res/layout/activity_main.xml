@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/root"
+    app:ccl_targetId="@id/container_view"
     tools:context=".MainActivity">
         <TextView
             android:id="@+id/btn_test"
@@ -20,5 +22,14 @@
             android:name="com.example.adaptivelayoutdemo.RvFragment"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_height="238dp"/>
+
+        <Button
+            android:id="@+id/btn_reset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="重置状态"
+            />
 
 </com.example.adaptivelayoutdemo.CustomConstraintLayout>

@@ -10,10 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.autoscrolllistdemo.adapter.SimpleAutoPollAdapter;
 import com.example.autoscrolllistdemo.decoration.MyItemDecoration;
-import com.example.autoscrolllistdemo.decoration.VerticalDividerItemDecoration;
 import com.example.autoscrolllistdemo.reposity.CommentReposity;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 

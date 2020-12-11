@@ -23,11 +23,13 @@ public class AutoPollRecyclerView extends RecyclerView {
     private AutoPollTask mAutoPollTask;
     private boolean test = false;
     // 存储已播放动画item的下标，保证动画一轮每个item只执行一次
-    private SparseIntArray mSparseIntArray;
+    private SparseIntArray mShowArray;
+    private SparseIntArray mHideArray;
 
     public AutoPollRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        mSparseIntArray = new SparseIntArray();
+        mShowArray = new SparseIntArray();
+        mHideArray = new SparseIntArray();
         mAutoPollTask = new AutoPollTask(this);
     }
 
@@ -44,13 +46,13 @@ public class AutoPollRecyclerView extends RecyclerView {
             int lastCompletelyVisibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
             int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
             int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-            if (lastVisibleItemPosition != NO_POSITION && mSparseIntArray.indexOfKey(lastVisibleItemPosition) < 0) {
+            int firstCompletelyVisibleItemPosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+            if (lastVisibleItemPosition != NO_POSITION && mShowArray.indexOfKey(lastVisibleItemPosition) < 0) {
                 Log.w(getClass().getSimpleName(), "AAAA lastVisibleItemPosition = " + lastVisibleItemPosition);
                 final View view = linearLayoutManager.findViewByPosition(lastVisibleItemPosition);
                 if (view != null) {
-                    mSparseIntArray.put(lastVisibleItemPosition, lastVisibleItemPosition);
-                    view.setAlpha(0.2f);
-                    view.setTag(true);
+                    mShowArray.put(lastVisibleItemPosition, lastVisibleItemPosition);
+                    view.setAlpha(0.5f);
                     view.animate().alpha(1f).setListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animation) {
@@ -59,7 +61,6 @@ public class AutoPollRecyclerView extends RecyclerView {
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            view.setAlpha(1f);
                         }
 
                         @Override
@@ -74,10 +75,41 @@ public class AutoPollRecyclerView extends RecyclerView {
                     }).setDuration(1500).start();
                 }
             }
+            if (
+                    // 除第一个位置，设alpha后会导致firstCompletelyVisibleItemPosition是-1，所以只需要判断firstVisibleItemPosition
+                    (firstVisibleItemPosition > 0 && firstCompletelyVisibleItemPosition == NO_POSITION) ||
+                    (firstVisibleItemPosition != NO_POSITION && firstCompletelyVisibleItemPosition != NO_POSITION && mHideArray.indexOfKey(firstVisibleItemPosition) < 0 && firstVisibleItemPosition != firstCompletelyVisibleItemPosition)){
+                final View view = linearLayoutManager.findViewByPosition(firstVisibleItemPosition);
+                if (view != null) {
+                    mHideArray.put(firstVisibleItemPosition, firstVisibleItemPosition);
+                    view.setAlpha(0.5f);
+                    view.animate().alpha(0f).setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+//                            view.setAlpha(1f);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    }).setDuration(1500L).start();
+                }
+            }
             Log.w(getClass().getSimpleName(), "onScrolled lastCompletelyVisibleItemPosition = " + lastCompletelyVisibleItemPosition + " lastVisibleItemPosition = " + lastVisibleItemPosition + "" +
                     " firstVisibleItemPosition = " + firstVisibleItemPosition + " itemCount = " + linearLayoutManager.getItemCount() + " getScrollVertical = " + canScrollVertically(1));
             if (!canScrollVertically(1)) {
-                mSparseIntArray.clear();
+                clearAnimationArray();
                 scrollToPosition(0);
             }
             /*if (lastCompletelyVisibleItemPosition == NO_POSITION || (lastCompletelyVisibleItemPosition == linearLayoutManager.getItemCount() - 1)){
@@ -87,6 +119,11 @@ public class AutoPollRecyclerView extends RecyclerView {
                 return;
             }*/
         }
+    }
+
+    private void clearAnimationArray() {
+        mShowArray.clear();
+        mHideArray.clear();
     }
 
     @Override
@@ -115,7 +152,7 @@ public class AutoPollRecyclerView extends RecyclerView {
         running = true;
         // 初始化
         if (init) {
-            mSparseIntArray.clear();
+            clearAnimationArray();
             scrollTo(0, 0);
         }
         postDelayed(mAutoPollTask, TIME_AUTO_POLL);

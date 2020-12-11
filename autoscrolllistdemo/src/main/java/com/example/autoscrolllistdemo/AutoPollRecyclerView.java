@@ -25,6 +25,7 @@ public class AutoPollRecyclerView extends RecyclerView {
     // 存储已播放动画item的下标，保证动画一轮每个item只执行一次
     private SparseIntArray mShowArray;
     private SparseIntArray mHideArray;
+    private int mTotalScrollY = 0;
 
     public AutoPollRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -37,6 +38,7 @@ public class AutoPollRecyclerView extends RecyclerView {
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
 //        Log.w("RV", "WWS onScrolled dx = " + dx + " dy = " + dy);
+        mTotalScrollY += dy;
         if (test) {
             return;
         }
@@ -53,75 +55,41 @@ public class AutoPollRecyclerView extends RecyclerView {
                 if (view != null) {
                     mShowArray.put(lastVisibleItemPosition, lastVisibleItemPosition);
                     view.setAlpha(0.5f);
-                    view.animate().alpha(1f).setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    }).setDuration(1500).start();
+                    view.animate().alpha(1f).setDuration(1500).start();
                 }
             }
-            if (
+            Log.w(getClass().getSimpleName(), "onScrolled firstVisibleItemPosition = " + firstVisibleItemPosition + " firstCompletelyVisibleItemPosition = " + firstCompletelyVisibleItemPosition);
+            // 少于两个item时对一个item要单独处理，因为最后item的高其实是RV的高+item的原高，导致第一个item要滑出屏幕时completeItemPos是-1的，因为第二个还没有完全展示
+            if (firstVisibleItemPosition == 0 && mHideArray.indexOfKey(firstVisibleItemPosition) < 0){
+                if (mTotalScrollY >= getMeasuredHeight()) {
+                    final View view = linearLayoutManager.findViewByPosition(firstVisibleItemPosition);
+                    if (view != null) {
+                        mHideArray.put(firstVisibleItemPosition, firstVisibleItemPosition);
+                        view.setAlpha(0.5f);
+                        view.animate().alpha(0f).setDuration(1500L).start();
+                    }
+                }
+            }else if (
                     // 除第一个位置，设alpha后会导致firstCompletelyVisibleItemPosition是-1，所以只需要判断firstVisibleItemPosition
-                    (firstVisibleItemPosition > 0 && firstCompletelyVisibleItemPosition == NO_POSITION) ||
-                    (firstVisibleItemPosition != NO_POSITION && firstCompletelyVisibleItemPosition != NO_POSITION && mHideArray.indexOfKey(firstVisibleItemPosition) < 0 && firstVisibleItemPosition != firstCompletelyVisibleItemPosition)){
+                    firstVisibleItemPosition > 0 && firstCompletelyVisibleItemPosition == NO_POSITION && mHideArray.indexOfKey(firstVisibleItemPosition) < 0 ){
                 final View view = linearLayoutManager.findViewByPosition(firstVisibleItemPosition);
                 if (view != null) {
                     mHideArray.put(firstVisibleItemPosition, firstVisibleItemPosition);
                     view.setAlpha(0.5f);
-                    view.animate().alpha(0f).setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-//                            view.setAlpha(1f);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    }).setDuration(1500L).start();
+                    view.animate().alpha(0f).setDuration(1500L).start();
                 }
             }
-            Log.w(getClass().getSimpleName(), "onScrolled lastCompletelyVisibleItemPosition = " + lastCompletelyVisibleItemPosition + " lastVisibleItemPosition = " + lastVisibleItemPosition + "" +
-                    " firstVisibleItemPosition = " + firstVisibleItemPosition + " itemCount = " + linearLayoutManager.getItemCount() + " getScrollVertical = " + canScrollVertically(1));
+            /*Log.w(getClass().getSimpleName(), "onScrolled lastCompletelyVisibleItemPosition = " + lastCompletelyVisibleItemPosition + " lastVisibleItemPosition = " + lastVisibleItemPosition + "" +
+                    " firstVisibleItemPosition = " + firstVisibleItemPosition + " itemCount = " + linearLayoutManager.getItemCount() + " getScrollVertical = " + canScrollVertically(1));*/
             if (!canScrollVertically(1)) {
                 clearAnimationArray();
                 scrollToPosition(0);
             }
-            /*if (lastCompletelyVisibleItemPosition == NO_POSITION || (lastCompletelyVisibleItemPosition == linearLayoutManager.getItemCount() - 1)){
-                if (firstVisibleItemPosition == lastVisibleItemPosition  && (lastVisibleItemPosition == linearLayoutManager.getItemCount() - 1)){
-                    scrollToPosition(0);
-                }
-                return;
-            }*/
         }
     }
 
     private void clearAnimationArray() {
+        mTotalScrollY = 0;
         mShowArray.clear();
         mHideArray.clear();
     }
@@ -153,7 +121,7 @@ public class AutoPollRecyclerView extends RecyclerView {
         // 初始化
         if (init) {
             clearAnimationArray();
-            scrollTo(0, 0);
+            scrollToPosition(0);
         }
         postDelayed(mAutoPollTask, TIME_AUTO_POLL);
     }

@@ -18,7 +18,7 @@ public class CommentReposity {
         if (mCommentList.size() > 0){
             return mCommentList;
         }
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 2; i++){
             mCommentList.add(getComment(i));
         }
         return mCommentList;

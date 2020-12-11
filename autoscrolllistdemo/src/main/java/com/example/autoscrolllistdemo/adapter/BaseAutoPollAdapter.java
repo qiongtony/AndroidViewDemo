@@ -76,10 +76,10 @@ public abstract class BaseAutoPollAdapter<T> extends RecyclerView.Adapter {
         return NORAML_ITEM_VIEW;
     }
 
-    public void addData(T bean, int pos) {
+    public void addData(int pos, T bean) {
         mDatas.add(pos, bean);
-//        notifyItemChanged(pos + 1, getItemCount()- pos);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(pos, getItemCount()- pos);
+//        notifyDataSetChanged();
     }
 
     public List<T> getDatas() {

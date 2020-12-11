@@ -18,7 +18,9 @@ public class MyItemDecoration extends RecyclerView.ItemDecoration {
         Log.w(getClass().getSimpleName(), "WWS DDDD getItemOffsets childPosition = " + childPosition + " height = " + parent.getMeasuredHeight());
         if (childPosition == 0){
             outRect.top = parent.getMeasuredHeight();
-        }else if (childPosition == (parent.getAdapter().getItemCount() - 1)){
+        }
+
+        if (childPosition == (parent.getAdapter().getItemCount() - 1)){
             outRect.bottom = parent.getMeasuredHeight();
         }
     }

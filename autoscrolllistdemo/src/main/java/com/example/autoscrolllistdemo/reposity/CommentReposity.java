@@ -18,7 +18,7 @@ public class CommentReposity {
         if (mCommentList.size() > 0){
             return mCommentList;
         }
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < 5; i++){
             mCommentList.add(getComment(i));
         }
         return mCommentList;
@@ -26,8 +26,8 @@ public class CommentReposity {
 
     public static CommentBean getComment(int pos){
         return new CommentBean(nickNameArr[(int) (Math.random() * nickNameArr.length)],
-//                commentArr[new Random().nextInt(commentArr.length)]
-                commentArr[pos]
+                commentArr[new Random().nextInt(commentArr.length)]
+//                commentArr[pos]
                 , "");
     }
 }

@@ -1,7 +1,12 @@
 package com.example.autoscrolllistdemo;
 
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
+import android.widget.Chronometer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,16 +18,28 @@ import com.example.autoscrolllistdemo.decoration.MyItemDecoration;
 import com.example.autoscrolllistdemo.reposity.CommentReposity;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private AutoPollRecyclerView rvComment;
     private SimpleAutoPollAdapter mAdapter;
+    private Timer mTimer = new Timer();
+    private long mStart;
+    /*private TimerTask mTask = new TimerTask() {
+        @Override
+        public void run() {
+            Log.w("WWS", "TEST timer = " + (SystemClock.elapsedRealtime() - mStart));
+        }
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rvComment = findViewById(R.id.rv_comment);
+        mStart = SystemClock.elapsedRealtime();
+//        mTimer.schedule(mTask, 0, 100);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvComment.setLayoutManager(linearLayoutManager);
         mAdapter = new SimpleAutoPollAdapter(CommentReposity.getCommentList());
@@ -32,12 +49,25 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*if (mTask != null){
+                    mTask.cancel();
+                }
+                mTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        Log.w("WWS", "TEST timer = " + (SystemClock.elapsedRealtime() - mStart));
+                    }
+                };
+                mTimer.schedule(mTask, 0, 100);*/
                 rvComment.start(false);
             }
         });
         findViewById(R.id.btn_stop).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*if (mTask != null){
+                    mTask.cancel();
+                }*/
                 rvComment.stop();
             }
         });
@@ -58,12 +88,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
-    private void addComment(int addPos, CommentBean commentBean){
+    private void addComment(int addPos, CommentBean commentBean) {
         int beforeAddItemCount = mAdapter.getItemCount();
         mAdapter.addData(addPos, commentBean);
-        if (addPos == beforeAddItemCount){
+        if (addPos == beforeAddItemCount) {
             mAdapter.notifyItemChanged(addPos - 1);
         }
     }

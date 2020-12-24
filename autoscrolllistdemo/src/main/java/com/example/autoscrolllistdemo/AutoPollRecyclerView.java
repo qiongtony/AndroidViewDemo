@@ -66,17 +66,20 @@ public class AutoPollRecyclerView extends RecyclerView {
                     if (view != null) {
                         mHideArray.put(firstVisibleItemPosition, firstVisibleItemPosition);
                         view.setAlpha(0.5f);
-                        view.animate().alpha(0f).setDuration(1500L).start();
+                        view.animate().alpha(0f).setDuration(500L).start();
                     }
                 }
             }else if (
                     // 除第一个位置，设alpha后会导致firstCompletelyVisibleItemPosition是-1，所以只需要判断firstVisibleItemPosition
-                    firstVisibleItemPosition > 0 && firstCompletelyVisibleItemPosition == NO_POSITION && mHideArray.indexOfKey(firstVisibleItemPosition) < 0 ){
+                    firstVisibleItemPosition > 0
+                            // 不用这个条件，因为有可能动画执行完成或没执行完成，没执行完成是NO_POS，执行完是具体的POS
+                    /*        && firstCompletelyVisibleItemPosition == NO_POSITION*/
+                            && mHideArray.indexOfKey(firstVisibleItemPosition) < 0 ){
                 final View view = linearLayoutManager.findViewByPosition(firstVisibleItemPosition);
                 if (view != null) {
                     mHideArray.put(firstVisibleItemPosition, firstVisibleItemPosition);
                     view.setAlpha(0.5f);
-                    view.animate().alpha(0f).setDuration(1500L).start();
+                    view.animate().alpha(0f).setDuration(500L).start();
                 }
             }
             /*Log.w(getClass().getSimpleName(), "onScrolled lastCompletelyVisibleItemPosition = " + lastCompletelyVisibleItemPosition + " lastVisibleItemPosition = " + lastVisibleItemPosition + "" +

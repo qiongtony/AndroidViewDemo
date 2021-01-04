@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CommentBean commentBean = CommentReposity.getComment(mAdapter.getDatas().size());
                 commentBean.setContent("手动添加的：" + commentBean.getContent());
-                if (new Random().nextBoolean()) {
+                addComment(0, commentBean);
+              /*  if (new Random().nextBoolean()) {
                     int addPos = mAdapter.getDatas().size();
                     addComment(addPos, commentBean);
                     Toast.makeText(MainActivity.this, "添加到队尾！ addPos = " + addPos, Toast.LENGTH_SHORT).show();
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
                     addComment(lastVisibleItemPosition + 1, commentBean);
                     Toast.makeText(MainActivity.this, "添加到下一条！", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
 
@@ -96,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.addData(addPos, commentBean);
         if (addPos == beforeAddItemCount) {
             mAdapter.notifyItemChanged(addPos - 1);
+        }
+        if (beforeAddItemCount == 0){
+            rvComment.start();
         }
     }
 }

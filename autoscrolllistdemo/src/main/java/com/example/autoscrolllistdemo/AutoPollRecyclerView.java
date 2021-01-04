@@ -82,8 +82,6 @@ public class AutoPollRecyclerView extends RecyclerView {
                     view.animate().alpha(0f).setDuration(500L).start();
                 }
             }
-            /*Log.w(getClass().getSimpleName(), "onScrolled lastCompletelyVisibleItemPosition = " + lastCompletelyVisibleItemPosition + " lastVisibleItemPosition = " + lastVisibleItemPosition + "" +
-                    " firstVisibleItemPosition = " + firstVisibleItemPosition + " itemCount = " + linearLayoutManager.getItemCount() + " getScrollVertical = " + canScrollVertically(1));*/
             if (!canScrollVertically(1)) {
                 clearAnimationArray();
                 scrollToPosition(0);
@@ -97,12 +95,6 @@ public class AutoPollRecyclerView extends RecyclerView {
         mHideArray.clear();
     }
 
-    @Override
-    public void onScrollStateChanged(int state) {
-        super.onScrollStateChanged(state);
-        Log.w("RV", "WWS onScrollStateChanged state = " + state);
-    }
-
     public void start() {
         start(true);
     }
@@ -114,6 +106,10 @@ public class AutoPollRecyclerView extends RecyclerView {
      */
     public void start(boolean init) {
         if (test) {
+            return;
+        }
+        // 这个优化也不太好做，有可能要和评论状态一致呢？
+        if (getAdapter() == null || getAdapter().getItemCount() <= 0){
             return;
         }
         if (running) {

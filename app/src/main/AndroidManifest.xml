@@ -9,15 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ExpanableTextActivity"></activity>
-        <activity android:name=".activity.ClassSevenTestActivity" />
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.BottomSheetDialogActivity"></activity>
+        <activity android:name=".activity.NewMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ExpanableTextActivity" />
+        <activity android:name=".activity.ClassSevenTestActivity" />
+        <activity android:name=".activity.MainActivity" />
     </application>
 
 </manifest>

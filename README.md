@@ -2,3 +2,6 @@
 实现的自定义View，防止重复造轮子
 
 concatadapterdemo：使用RV1.2.0的ConcatAdapter实现多布局的方式
+autoscrolllistdemo：自动滚动的RV列表，支持开始/暂停/插入
+adaptivelayoutdemo：实现自适应改变高度
+customlayoutmanagerdemo：自定义RecyclerView.LayoutManager

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidViewDemo</string>
+    <string name="text_welcome_message">欢迎</string>
+    <string name="text_dialog_bottom_sheet">Dialog Bottom Sheet</string>
 </resources>

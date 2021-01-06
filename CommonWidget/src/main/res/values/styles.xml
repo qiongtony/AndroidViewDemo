@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ErbanBottomSheetDialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:windowAnimationStyle">@style/ErbanWindowAnimationStyle</item>-->
+        <item name="bottomSheetStyle">@style/ErbanBottomSheetModel</item>
+    </style>
+
+    <!--<style name="ErbanWindowAnimationStyle">
+        <item name="android:windowEnterAnimation">@anim/anim_face_bottom_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_face_bottom_dialog_out</item>
+    </style>-->
+
+    <style name="ErbanBottomSheetModel">
+        <item name="behavior_peekHeight">auto</item>
+        <item name="behavior_hideable">true</item>
+        <item name="behavior_skipCollapsed">true</item>
+    </style>
+</resources>

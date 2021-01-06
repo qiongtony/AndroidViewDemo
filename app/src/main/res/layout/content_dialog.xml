@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/bottomSheetLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:gravity="center"
+        android:background="@drawable/shape_white_radius_16dp"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/bottomSheetHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/text_dialog_bottom_sheet"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bottomSheetHeading"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/text_welcome_message"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+    </RelativeLayout>
+</layout>

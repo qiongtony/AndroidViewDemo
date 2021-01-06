@@ -2,12 +2,10 @@ package com.example.autoscrolllistdemo;
 
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
-import android.widget.Chronometer;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.ViewTreeObserver;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,9 +15,7 @@ import com.example.autoscrolllistdemo.adapter.SimpleAutoPollAdapter;
 import com.example.autoscrolllistdemo.decoration.MyItemDecoration;
 import com.example.autoscrolllistdemo.reposity.CommentReposity;
 
-import java.util.Random;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private AutoPollRecyclerView rvComment;
@@ -90,6 +86,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final EditText et = findViewById(R.id.et);
+        et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.w(MainActivity.this.getClass().getSimpleName(), "onFocusChange v == et ? " + (v == et) + " hasFocus = " + hasFocus);
+            }
+        });
+
+        KeyboardStatusDetector detector = new KeyboardStatusDetector().setVisibilityListener(new KeyboardStatusDetector.KeyboardVisibilityListener() {
+            @Override
+            public void onVisibilityChanged(boolean keyboardVisible) {
+                Log.w("WWS", "onVisibilityChanged keyboardVisible = " + keyboardVisible);
+            }
+        });
+        detector.registerActivity(this);
+
     }
 
     private void addComment(int addPos, CommentBean commentBean) {
@@ -98,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         if (addPos == beforeAddItemCount) {
             mAdapter.notifyItemChanged(addPos - 1);
         }
-        if (beforeAddItemCount == 0){
+        if (beforeAddItemCount == 0) {
             rvComment.start();
         }
     }
